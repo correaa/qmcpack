@@ -439,7 +439,7 @@ public:
     {
       M[i].sliced(0, walker_size) = W[tot_num_walkers - 1];
       if (wlk_desc[3] > 0)
-        M[i].sliced(walker_size, walker_size + bp_walker_size) = BPW(BPW.extension(0), tot_num_walkers - 1);
+        M[i].sliced(walker_size, walker_size + bp_walker_size) = BPW(BPW.extension(), tot_num_walkers - 1);
       tot_num_walkers--;
     }
   }
@@ -502,7 +502,7 @@ public:
         std::swap(*kill, *keep);
         W[std::distance(itbegin, kill)] = W[tot_num_walkers - 1];
         if (wlk_desc[3] > 0)
-          BPW(BPW.extension(0), std::distance(itbegin, kill)) = BPW(BPW.extension(0), tot_num_walkers - 1);
+          BPW(BPW.extension(0), std::distance(itbegin, kill)) = BPW(BPW.extension(), tot_num_walkers - 1);
         --tot_num_walkers;
         --keep;
       }
@@ -555,14 +555,14 @@ public:
         {
           W[tot_num_walkers] = W[pos];
           if (wlk_desc[3] > 0)
-            BPW(BPW.extension(0), tot_num_walkers) = BPW(BPW.extension(0), pos);
+            BPW(BPW.extension(), tot_num_walkers) = BPW(BPW.extension(0), pos);
           tot_num_walkers++;
         }
         for (int i = 0, in = itbegin->second - 1 - n; i < in; i++, cnt++)
         {
           M[cnt].sliced(0, walker_size) = W[pos];
           if (wlk_desc[3] > 0)
-            M[cnt].sliced(walker_size, walker_size + bp_walker_size) = BPW(BPW.extension(0), pos);
+            M[cnt].sliced(walker_size, walker_size + bp_walker_size) = BPW(BPW.extension(), pos);
         }
       }
     }
