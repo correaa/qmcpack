@@ -251,7 +251,7 @@ public:
       {
         for (int wi = 0; wi < Gc.size(1); wi++)
         {
-          auto _v_ = v_(v_.extension(0), wi);
+          auto _v_ = v_(v_.extension(), wi);
           if (getKl)
           {
             auto Kli = (*Kl)[wi];
@@ -267,7 +267,7 @@ public:
         }
       }
       for (int wi = 0; wi < Gc.size(1); wi++)
-        E[wi][2] = 0.5 * scl * static_cast<ComplexType>(ma::dot(v_(v_.extension(0), wi), v_(v_.extension(0), wi)));
+        E[wi][2] = 0.5 * scl * static_cast<ComplexType>(ma::dot(v_(v_.extension(), wi), v_(v_.extension(), wi)));
     }
 #if defined(MIXED_PRECISION)
 #endif
