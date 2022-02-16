@@ -404,7 +404,7 @@ public:
     {
       W[tot_num_walkers] = M[i].sliced(0, walker_size);
       if (wlk_desc[3] > 0)
-        BPW(BPW.extension(0), tot_num_walkers) = M[i].sliced(walker_size, walker_size + bp_walker_size);
+        BPW(BPW.extension(), tot_num_walkers) = M[i].sliced(walker_size, walker_size + bp_walker_size);
       tot_num_walkers++;
     }
   }
