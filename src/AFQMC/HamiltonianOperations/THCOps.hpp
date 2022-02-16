@@ -907,7 +907,7 @@ public:
       Array_ref<SPRealType, 2> vsp_R(pointer_cast<SPRealType>(vsp.origin()), {vsp.size(0), 2 * vsp.size(1)});
       ma::product(SPRealType(a), T(Luv_R(Luv_R.extension(0), {c0, cN})), Guu_R, SPRealType(c), vsp_R.sliced(c0, cN));
 #else
-      ma::product(SPRealType(a), T(Luv(Luv.extension(0), {c0, cN})), Guu, SPRealType(c), vsp.sliced(c0, cN));
+      ma::product(SPRealType(a), T(Luv(Luv.extension(), {c0, cN})), Guu, SPRealType(c), vsp.sliced(c0, cN));
 #endif
     }
     else
@@ -920,9 +920,9 @@ public:
                                      {Luv.size(0), 2 * Luv.size(1)});
       Array_ref<SPRealType, 2> Guu_R(pointer_cast<SPRealType>(Guu.origin()), {nu, 2 * nwalk});
       Array_ref<SPRealType, 2> vsp_R(pointer_cast<SPRealType>(vsp.origin()), {vsp.size(0), 2 * vsp.size(1)});
-      ma::product(SPRealType(a), T(Luv_R(Luv_R.extension(0), {c0, cN})), Guu_R, SPRealType(c), vsp_R.sliced(c0, cN));
+      ma::product(SPRealType(a), T(Luv_R(Luv_R.extension(), {c0, cN})), Guu_R, SPRealType(c), vsp_R.sliced(c0, cN));
 #else
-      ma::product(SPRealType(a), T(Luv(Luv.extension(0), {c0, cN})), Guu, SPRealType(c), vsp.sliced(c0, cN));
+      ma::product(SPRealType(a), T(Luv(Luv.extension(), {c0, cN})), Guu, SPRealType(c), vsp.sliced(c0, cN));
 #endif
     }
     if (not std::is_same<vType, SPComplexType>::value)
@@ -990,7 +990,7 @@ protected:
       std::tie(k0, kN) = FairDivideBoundary(comm->rank(), nmo_, comm->size());
       ShmArray<SPComplexType, 2> TGw({nmo_, nw * nel_},
                                      shm_buffer_manager.get_generator().template get_allocator<SPComplexType>());
-      ma::transpose(Gw(Gw.extension(0), {k0, kN}), TGw.sliced(k0, kN));
+      ma::transpose(Gw(Gw.extension(), {k0, kN}), TGw.sliced(k0, kN));
       comm->barrier();
       ma::product(ma::T(Piu({0, nmo_}, {u0, uN})), TGw, T1);
     }
@@ -1134,11 +1134,11 @@ protected:
       // dispatch these through ma_blas_extensions!!!
       // Gwv = sum_a Twav Pva
       if (nu0 > 0) // calculate Guu from u={0,nu0}
-        Aijk_Bkj_Cik(nw, nelec[ispin], nu0, make_device_ptr(Tav.origin()), Tav.stride(1), Tav.stride(0),
-                     make_device_ptr(rotcPua[k].origin()), rotcPua[k].stride(0), make_device_ptr(Guu.origin()), nv);
+        Aijk_Bkj_Cik(nw, nelec[ispin], nu0, make_device_ptr(Tav.origin()), std::get<1>(Tav.strides()), Tav.stride(),
+                     make_device_ptr(rotcPua[k].origin()), rotcPua[k].stride(), make_device_ptr(Guu.origin()), nv);
       if (nu0 + nu < nv) // calculate Guu from u={nu0+nu,nv}
-        Aijk_Bkj_Cik(nw, nelec[ispin], nv - nu0 - nu, make_device_ptr(Tav.origin()) + nu0 + nu, Tav.stride(1),
-                     Tav.stride(0), make_device_ptr(rotcPua[k][nu0 + nu].origin()), rotcPua[k].stride(0),
+        Aijk_Bkj_Cik(nw, nelec[ispin], nv - nu0 - nu, make_device_ptr(Tav.origin()) + nu0 + nu, std::get<1>(Tav.strides()),
+                     Tav.stride(0), make_device_ptr(rotcPua[k][nu0 + nu].origin()), rotcPua[k].stride(),
                      make_device_ptr(Guu.origin()) + nu0 + nu, nv);
     }
     comm->barrier();
